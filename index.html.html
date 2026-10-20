@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lustre & Co. — Cleaning & Valeting</title>
+<style>
+:root{
+  --ink:#1B2430; --paper:#F7F5F0; --accent:#2F6F5E; --gold:#C98A2B;
+  --line:#D8D3C7; --muted:#6B7280; --card:#FFFFFF;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --ink:#EDEAE1; --paper:#14181F; --accent:#5FBFA4; --gold:#E0A94A; --line:#2A2F3A; --muted:#9AA1AC; --card:#1B2028; }
+}
+:root[data-theme="dark"]{ --ink:#EDEAE1; --paper:#14181F; --accent:#5FBFA4; --gold:#E0A94A; --line:#2A2F3A; --muted:#9AA1AC; --card:#1B2028; }
+html{scroll-padding-top:env(safe-area-inset-top,0px); overflow-x:hidden;}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.55; overflow-x:hidden; max-width:100vw;}
+nav{
+  position:sticky; top:0; top:env(safe-area-inset-top,0px); z-index:10;
+  background:#1B2430; display:flex; align-items:center; flex-wrap:wrap; gap:6px; row-gap:8px;
+  padding:12px 16px; padding-top:calc(12px + env(safe-area-inset-top,0px));
+}
+nav .brand{display:flex; align-items:center; gap:8px; color:#F7F5F0; font-family:Georgia,serif; font-weight:700; font-size:1.05rem; margin-right:auto;}
+nav .brand svg{width:26px; height:26px; flex-shrink:0;}
+nav button{background:none; border:none; color:#D8D3C7; font-size:0.88rem; padding:8px 10px; border-radius:5px; cursor:pointer; font-family:inherit; white-space:nowrap;}
+nav button.active{background:#2F6F5E; color:#F7F5F0; font-weight:600;}
+@media (max-width:480px){
+  nav{justify-content:center;}
+  nav .brand{width:100%; justify-content:center; margin-right:0;}
+  nav button{font-size:0.8rem; padding:7px 8px;}
+}
+.page{display:none; max-width:640px; margin:0 auto; padding:0 20px 70px;}
+.page.active{display:block;}
+.hero{padding:44px 0 20px; text-align:center;}
+.hero h1{font-family:Georgia,serif; font-size:1.9rem; margin:0 0 10px;}
+.hero p{color:var(--muted); max-width:44ch; margin:0 auto 18px; font-size:1.02rem;}
+.cta-row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+.btn{display:inline-block; padding:12px 22px; border-radius:6px; background:var(--accent); color:var(--paper); font-weight:600; text-decoration:none; border:none; font-size:0.95rem; cursor:pointer; font-family:inherit;}
+.btn.gold{background:var(--gold);}
+.btn.outline{background:transparent; border:1px solid var(--accent); color:var(--accent);}
+.btn:disabled{opacity:0.5; cursor:not-allowed;}
+.tagline{color:var(--gold); font-family:Georgia,serif; font-style:italic; font-size:1.05rem; margin:2px 0 16px;}
+.feature{border:1.5px solid var(--gold); border-radius:6px; padding:20px; margin-bottom:18px; background:var(--card);}
+.feature .eyebrow{color:var(--gold); font-weight:600; font-size:0.78rem; letter-spacing:0.03em; margin:0 0 6px;}
+.feature h3{font-family:Georgia,serif; font-size:1.25rem; margin:0 0 8px;}
+.feature .price{font-size:1.5rem; font-weight:700; color:var(--accent); font-family:Georgia,serif;}
+.feature .price span{font-size:0.9rem; color:var(--muted); font-weight:400; font-family:inherit;}
+h2{font-family:Georgia,serif; font-size:1.35rem; border-top:2px solid var(--accent); padding-top:10px; margin:38px 0 12px;}
+.card{background:var(--card); border:1px solid var(--line); border-radius:6px; padding:18px 20px; margin-bottom:14px;}
+table{width:100%; border-collapse:collapse; font-size:0.94rem;}
+th,td{text-align:left; padding:9px 8px; border-bottom:1px solid var(--line);}
+th{color:var(--muted); font-size:0.82rem;}
+ul.check{list-style:none; padding:0; margin:8px 0;}
+ul.check li{padding:6px 0 6px 26px; position:relative; border-bottom:1px solid var(--line);}
+ul.check li:last-child{border-bottom:none;}
+ul.check li:before{content:"○"; position:absolute; left:0; top:6px; color:var(--accent);}
+.tabs{display:flex; gap:8px; margin:20px 0 16px;}
+.tab{flex:1; padding:11px; text-align:center; border-radius:8px; border:1px solid var(--line); background:var(--card); font-weight:600; cursor:pointer; color:var(--muted); font-size:0.92rem;}
+.tab.active{background:var(--accent); color:var(--paper); border-color:var(--accent);}
+.panel{display:none;}
+.panel.active{display:block;}
+label{display:block; font-size:0.85rem; color:var(--muted); margin:12px 0 4px;}
+input, select, textarea{width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; background:var(--paper); color:var(--ink); font-size:1rem; font-family:inherit;}
+textarea{resize:vertical; min-height:60px;}
+.q{border-bottom:1px solid var(--line); padding:12px 0;}
+.q:last-child{border-bottom:none;}
+.q p{margin:0 0 6px; font-weight:600; font-size:0.92rem;}
+.opts label{display:flex; align-items:center; gap:8px; font-size:0.9rem; color:var(--ink); margin:5px 0; font-weight:normal;}
+.opts input{width:auto;}
+.score{display:none; text-align:center; padding:10px; background:var(--paper); border-radius:6px; margin-top:8px; font-weight:600;}
+.muted{color:var(--muted); font-size:0.87rem;}
+#qr{display:flex; justify-content:center; margin:10px 0;}
+footer{text-align:center; margin-top:40px; color:var(--muted); font-size:0.85rem; padding:0 20px 40px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <svg viewBox="0 0 180 180"><circle cx="90" cy="90" r="72" fill="none" stroke="#C98A2B" stroke-width="8"/><text x="90" y="108" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="52" fill="#F7F5F0">L</text></svg>
+    Lustre &amp; Co.
+  </div>
+  <button class="navbtn active" data-page="home" onclick="showPage('home', this)">Home</button>
+  <button class="navbtn" data-page="services" onclick="showPage('services', this)">Services</button>
+  <button class="navbtn" data-page="about" onclick="showPage('about', this)">About</button>
+  <button class="navbtn" data-page="book" onclick="showPage('book', this)">Book/Apply</button>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1>Cleaning &amp; valeting, done right</h1>
+    <p class="tagline">Spotless. Every time. Guaranteed.</p>
+    <p>Mobile home cleaning, end-of-tenancy, Airbnb turnovers and car valeting — booked in minutes, done to a written standard, and backed by a guarantee most cleaners won't give you.</p>
+    <div class="cta-row">
+      <button class="btn" onclick="showPage('book', document.querySelector('[data-page=book]'))">Book a service</button>
+      <button class="btn outline" onclick="showPage('book', document.querySelector('[data-page=book]'))">Join the team</button>
+    </div>
+  </div>
+
+  <div class="feature">
+    <p class="eyebrow">NEW — FOR SHOPS THAT CAN'T AFFORD A DIRTY FLOOR</p>
+    <h3>Lustre AutoGlide</h3>
+    <p>Right now, someone in your shop is losing an hour a day to a broom — an hour that isn't serving customers or taking money. AutoGlide does that hour for you, automatically, every single day, for a fraction of what that hour costs you in wages.</p>
+    <p class="muted" style="margin:6px 0 14px;">A member of staff costs £230+ a month to do the same job by hand. We only take on a handful of shops a month, so the floor's always ours to lose, not yours.</p>
+    <button class="btn gold" onclick="showPage('services', document.querySelector('[data-page=services]'))">See AutoGlide &amp; pricing</button>
+  </div>
+
+  <h2>Why Lustre &amp; Co.</h2>
+  <ul class="check">
+    <li>Fixed price, agreed before we start — no surprises, no "while we're here" upsells</li>
+    <li>Before &amp; after photos sent with every job, so you see the standard without being there</li>
+    <li>DBS-checked, fully insured team — your home, your keys, our responsibility</li>
+    <li>Not happy? We come back and put it right within 24 hours — free, no arguing</li>
+  </ul>
+
+  <h2>What we do</h2>
+  <div class="card"><b>Car valeting</b> — mobile, we come to you</div>
+  <div class="card"><b>Home cleaning</b> — regular or one-off</div>
+  <div class="card"><b>End-of-tenancy</b> — for landlords &amp; agents</div>
+  <div class="card"><b>Airbnb turnovers</b> — fast, fixed-window turnaround</div>
+</div>
+
+<!-- SERVICES -->
+<div class="page" id="page-services">
+  <div class="hero" style="padding-top:36px;"><h1>Services</h1></div>
+  <div class="card"><b>Car valeting</b> — exterior wash and tidy, or a full in-and-out valet, mobile to your door.</div>
+  <div class="card"><b>Home cleaning</b> — regular or one-off, tailored to your home.</div>
+  <div class="card"><b>End-of-tenancy cleaning</b> — a full turnaround for landlords and letting agents.</div>
+  <div class="card"><b>Airbnb / holiday-let turnovers</b> — fast, reliable cleans between guests.</div>
+  <p class="muted">Get a fixed price for your job with a quick, free quote — pricing's on the Book page, ready when you are.</p>
+
+  <h2>Lustre AutoGlide — for shops</h2>
+  <div class="feature">
+    <p class="eyebrow">DAILY. AUTOMATIC. NEVER CALLS IN SICK.</p>
+    <h3>The hour your staff lose to a broom — gone</h3>
+    <p>Every day a shop stays open, somebody stops serving customers to sweep and mop. That's wages spent on a floor instead of a sale. AutoGlide takes that job off the clock completely — running on its own schedule, every single day, while your team stays on the shop floor earning you money.</p>
+    <p style="margin-top:12px;"><b>Here's the math your accountant will like:</b> a member of staff costs roughly £12.71 an hour. One hour a day on cleaning is over <b>£230 a month</b> in wages, National Insurance and holiday pay — just for sweeping. AutoGlide does the same job, every day, for a fraction of that.</p>
+    <ul class="check" style="margin-top:12px;">
+      <li>The robot vacuum — ours. You never buy it, store it or fix it</li>
+      <li>A weekly on-site visit: emptied, filters cleaned, checked over, by us</li>
+      <li>Breaks down? We replace it — free, usually same week</li>
+      <li>No contract beyond month 3 — not happy, you simply stop</li>
+    </ul>
+    <p class="muted" style="margin:14px 0 16px;">We only fit in a handful of new shops each month — once this month's slots are gone, you're on next month's list.</p>
+    <button class="btn gold" onclick="showPage('book', document.querySelector('[data-page=book]'))" style="width:100%;">See pricing &amp; claim a slot</button>
+  </div>
+
+  <h2>Who we work with</h2>
+  <ul class="check">
+    <li>Landlords &amp; letting agents — end-of-tenancy turnaround</li>
+    <li>Airbnb &amp; holiday-let hosts — fast between-guest cleans</li>
+    <li>Taxi firms &amp; small dealers — regular valeting</li>
+    <li>Homeowners — one-off or recurring cleans</li>
+  </ul>
+  <div class="cta-row" style="margin-top:20px;">
+    <button class="btn" onclick="showPage('book', document.querySelector('[data-page=book]'))">Get a quote</button>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <div class="hero" style="padding-top:36px;"><h1>About Lustre &amp; Co.</h1></div>
+  <p>Started by someone who's run a car wash and knows what "done properly" actually looks like — not what a quick wipe-round looks like with a nice photo. Every job follows the same written checklist, so the standard doesn't change whether it's the founder or a team member on site. That's the whole point: you shouldn't have to hope you got a good one.</p>
+  <h2>Our guarantee</h2>
+  <p>If you're not happy with the result, say so and we come back and put it right — free, within 24 hours. No forms, no arguing, no "that's not covered." If we said we'd do it, we do it.</p>
+  <h2>Trust &amp; safety</h2>
+  <ul class="check">
+    <li>DBS-checked team</li>
+    <li>Public liability insurance</li>
+    <li>Fixed price, agreed before work starts</li>
+  </ul>
+</div>
+
+<!-- BOOK/APPLY -->
+<div class="page" id="page-book">
+  <div class="hero" style="padding-top:36px;"><h1>Book or apply</h1></div>
+  <div class="tabs">
+    <div class="tab active" onclick="showPanel('book')">Book a service</div>
+    <div class="tab" onclick="showPanel('join')">Join the team</div>
+  </div>
+
+  <div class="panel active" id="book">
+    <div class="card">
+      <table>
+        <tr><th>Service</th><th>Price</th></tr>
+        <tr><td>Home clean</td><td>£22 – £36/hr</td></tr>
+        <tr><td colspan="2" style="font-weight:600; padding-top:12px; border-bottom:none;">Airbnb / holiday-let turnover</td></tr>
+        <tr><td style="padding-left:20px;">Studio / 1-bed</td><td>£45 – £55</td></tr>
+        <tr><td style="padding-left:20px;">2-bed</td><td>£65 – £80</td></tr>
+        <tr><td style="padding-left:20px;">3-bed</td><td>£85 – £105</td></tr>
+        <tr><td style="padding-left:20px;">4-bed+</td><td>Quoted individually</td></tr>
+        <tr><td colspan="2" style="font-weight:600; padding-top:12px; border-bottom:none;">End-of-tenancy clean</td></tr>
+        <tr><td style="padding-left:20px;">Studio / 1-bed</td><td>£150 – £190</td></tr>
+        <tr><td style="padding-left:20px;">2-bed</td><td>£190 – £240</td></tr>
+        <tr><td style="padding-left:20px;">3-bed</td><td>£240 – £300</td></tr>
+        <tr><td style="padding-left:20px;">4-bed+</td><td>Quoted individually</td></tr>
+        <tr><td style="padding-top:12px;">Car valet</td><td>£45 – £180</td></tr>
+        <tr><td>AutoGlide (shops)</td><td>£59/month</td></tr>
+      </table>
+      <p class="muted" style="margin:10px 0 0; font-size:0.85rem;">Final price confirmed after viewing the property — condition can move a job toward the top of its range.</p>
+      <p class="muted" style="margin:10px 0 0; font-weight:600; color:var(--ink);">Payment is taken upfront to confirm every booking. Send your request below and we'll reply with secure payment details once we've confirmed the job with you.</p>
+    </div>
+    <div class="card">
+      <label>Service</label>
+      <select id="b-service"><option>Home clean</option><option>Airbnb turnover</option><option>End-of-tenancy clean</option><option>Car valet</option><option>AutoGlide for my shop</option></select>
+      <label>Your name</label><input id="b-name" placeholder="Full name">
+      <label>Postcode</label><input id="b-postcode" placeholder="e.g. TA1 1AA">
+      <label>Do you have a vacuum &amp; mop ready on site for us to use?</label>
+      <select id="b-equipment"><option>Yes</option><option>No</option><option>Not sure</option></select>
+      <p class="muted" style="margin-top:4px;">We currently work using equipment already at the property — this helps us confirm the booking.</p>
+      <label>Anything we should know?</label><textarea id="b-notes" placeholder="Preferred day, access notes, etc."></textarea>
+      <button class="btn" onclick="bookWhatsApp()" style="width:100%; margin-top:14px;">📩 Send booking on WhatsApp</button>
+      <a class="btn gold" id="book-email-link" href="#" target="_blank" onclick="return bookEmail(event)" style="display:block; text-align:center; margin-top:8px;">✉️ Send booking by email</a>
+      <a class="btn outline" href="tel:+447951998326" style="display:block; text-align:center; margin-top:8px;">📞 Call now</a>
+    </div>
+  </div>
+
+  <div class="panel" id="join">
+    <div class="card">
+      <label>Full name</label><input id="j-name" placeholder="Full name">
+      <label>Phone</label><input id="j-phone" placeholder="07...">
+      <label>Email</label><input id="j-email" type="email" placeholder="you@email.com">
+      <label>You are applying as</label>
+      <select id="j-status"><option>Self-employed / sole trader</option><option>A registered company or agency</option><option>Looking for employed work</option></select>
+      <label>Hours you're available per week</label>
+      <input id="j-hours" placeholder="e.g. 15">
+      <p class="muted" style="margin-top:4px;">We're currently looking for roughly 10–20 hours a week to start, flexible around other work — tell us what you can offer.</p>
+    </div>
+    <div class="card">
+      <label>Do you already hold a Basic DBS check?</label>
+      <select id="j-dbs" onchange="checkDbs()">
+        <option value="">Select an answer</option>
+        <option value="yes">Yes — I already have one</option>
+        <option value="applying">No — but I'm getting one</option>
+        <option value="no">No — not yet</option>
+      </select>
+      <p class="muted" id="dbs-note" style="margin-top:4px;">You'll need a Basic DBS check before your first job — it's official, quick and low-cost. Once you have one, you can apply below.</p>
+      <a class="btn outline" href="https://www.gov.uk/request-copy-criminal-record" target="_blank" rel="noopener" style="display:block; text-align:center; margin-top:4px;">Basic DBS check — gov.uk ↗</a>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0; border:none; padding-top:0;">Quick check (5 qs)</h2>
+      <div id="quiz"></div>
+      <div class="score" id="score"></div>
+    </div>
+    <div class="card">
+      <p class="muted" id="apply-hint">Already have your DBS check? Select "Yes" above to apply.</p>
+      <button class="btn" id="apply-wa-btn" onclick="applyWhatsApp()" style="width:100%;" disabled>📩 Apply on WhatsApp</button>
+      <a class="btn gold" id="apply-email-link" href="#" target="_blank" onclick="return applyEmail(event)" style="display:block; text-align:center; margin-top:8px; pointer-events:none; opacity:0.5;">✉️ Apply by email</a>
+    </div>
+  </div>
+</div>
+
+<footer>Lustre &amp; Co. · +44 7951 998326 · wenyikat12@gmail.com</footer>
+
+<script>
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+function bookingMessage(){
+  const service = document.getElementById('b-service').value;
+  const name = document.getElementById('b-name').value || '(not given)';
+  const postcode = document.getElementById('b-postcode').value || '(not given)';
+  const equipment = document.getElementById('b-equipment').value;
+  const notes = document.getElementById('b-notes').value || 'none';
+  return `Booking request\nService: ${service}\nName: ${name}\nPostcode: ${postcode}\nVacuum & mop on site: ${equipment}\nNotes: ${notes}\n\n(I understand payment is taken upfront to confirm the booking — please send payment details.)`;
+}
+function bookWhatsApp(){
+  window.open('https://wa.me/447386993902?text=' + encodeURIComponent(bookingMessage()), '_blank');
+}
+function bookEmail(event){
+  const link = document.getElementById('book-email-link');
+  link.href = 'mailto:wenyikat12@gmail.com?subject=' + encodeURIComponent('Booking request') + '&body=' + encodeURIComponent(bookingMessage());
+  return true;
+}
+const questions = [
+  {q:"A customer's key is under the mat, but the door is already unlocked. You:", opts:["Go in and start work","Knock first, confirm it's safe, then start","Leave and don't tell anyone"], correct:1},
+  {q:"You break a small ornament while cleaning. You:", opts:["Hide it","Tell the customer straight away","Only mention it if asked"], correct:1},
+  {q:"You're running 20 minutes late. You:", opts:["Message the customer as soon as you know","Say nothing and arrive late","Cancel without notice"], correct:0},
+  {q:"Safest general surface cleaner?", opts:["Neat bleach","A labelled multi-surface cleaner, used as directed","Whatever's under the sink"], correct:1},
+  {q:"A customer isn't happy with the finish. You:", opts:["Argue it's fine","Offer to fix it, per the guarantee","Leave immediately"], correct:1}
+];
+let answers = new Array(questions.length).fill(null);
+const quizEl = document.getElementById('quiz');
+questions.forEach((item, i)=>{
+  const div = document.createElement('div'); div.className = 'q';
+  let opts = item.opts.map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}" onchange="answers[${i}]=${j}; showScore();">${o}</label>`).join('');
+  div.innerHTML = `<p>${i+1}. ${item.q}</p><div class="opts">${opts}</div>`;
+  quizEl.appendChild(div);
+});
+function showScore(){
+  const answered = answers.filter(a=>a!==null).length;
+  if(answered < questions.length) return;
+  let score = 0; answers.forEach((a,i)=>{ if(a===questions[i].correct) score++; });
+  const el = document.getElementById('score');
+  el.style.display = 'block'; el.textContent = `Score: ${score} / ${questions.length}`;
+}
+const dbsLabels = {yes:"Yes — already holds one", applying:"No — getting one", no:"No — not yet"};
+function applicationMessage(){
+  const name = document.getElementById('j-name').value || '(not given)';
+  const phone = document.getElementById('j-phone').value || '(not given)';
+  const email = document.getElementById('j-email').value || '(not given)';
+  const status = document.getElementById('j-status').value;
+  const hours = document.getElementById('j-hours').value || '(not given)';
+  const dbs = dbsLabels[document.getElementById('j-dbs').value] || '(not given)';
+  const answered = answers.filter(a=>a!==null).length;
+  let score = 'not completed';
+  if(answered === questions.length){
+    let s = 0; answers.forEach((a,i)=>{ if(a===questions[i].correct) s++; });
+    score = `${s} / ${questions.length}`;
+  }
+  return `Job application\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nApplying as: ${status}\nHours available/week: ${hours}\nBasic DBS check: ${dbs}\nQuiz score: ${score}\n\n(Please attach your CV before sending, if emailing)`;
+}
+function checkDbs(){
+  const dbs = document.getElementById('j-dbs').value;
+  const waBtn = document.getElementById('apply-wa-btn');
+  const emailLink = document.getElementById('apply-email-link');
+  const note = document.getElementById('dbs-note');
+  const hint = document.getElementById('apply-hint');
+  if(dbs === 'yes'){
+    waBtn.disabled = false;
+    emailLink.style.pointerEvents = 'auto';
+    emailLink.style.opacity = '1';
+    note.textContent = "Great — you're clear to apply below.";
+    hint.textContent = "You're all set — send your application on WhatsApp or by email.";
+  } else {
+    waBtn.disabled = true;
+    emailLink.style.pointerEvents = 'none';
+    emailLink.style.opacity = '0.5';
+    note.textContent = "You'll need a Basic DBS check before your first job — it's official, quick and low-cost. Once you have one, you can apply below.";
+    hint.textContent = 'Already have your DBS check? Select "Yes" above to apply.';
+  }
+}
+function applyWhatsApp(){
+  if(document.getElementById('j-dbs').value !== 'yes') return;
+  window.open('https://wa.me/447386993902?text=' + encodeURIComponent(applicationMessage()), '_blank');
+}
+function applyEmail(event){
+  if(document.getElementById('j-dbs').value !== 'yes'){ event.preventDefault(); return false; }
+  const link = document.getElementById('apply-email-link');
+  link.href = 'mailto:wenyikat12@gmail.com?subject=' + encodeURIComponent('Job application') + '&body=' + encodeURIComponent(applicationMessage());
+  return true;
+}
+</script>
+</body>
+</html>
